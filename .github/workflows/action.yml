@@ -29,6 +29,16 @@ jobs:
      with:
       target: ${{ github.repository }}:latest
       tag: "slim"
+   - name: Run Trivy vulnerability scanner
+     uses: aquasecurity/trivy-action@master
+     continue-on-error: true
+     with:
+        image-ref: 'ghcr.io/${{ github.repository }}:latest'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'MEDIUM,HIGH,CRITICAL'
    - name: Push the image 
      run: docker image push "${{ github.repository }}" --all-tags
    - name: Dump the report
