@@ -1,0 +1,30 @@
+name: Deploy to AKS
+
+on:
+ push:
+  branches:
+   - main
+
+jobs:
+ lint:
+  runs-on: ubuntu-latest
+  steps:
+   - name: Build Docker Image
+     uses: docker/build-push-action@v4
+     with:
+      push: false
+      tags: ${{ github.repository }}:latest
+   - name: Slim the image
+     uses: kitabisa@docker-slim-action@v1
+     env:
+      DSLIM_HTTP_PROBE: false
+     with:
+      target: ${{ github.repository }}:latest
+      tag: "slim"
+   - name: Push the image 
+     run: docker image push "${{ github.repository }}" --all-tags
+   - name: Dump the report
+     env:
+      REPORT: ${{ steps.slim.outputs.report }}
+      
+   
