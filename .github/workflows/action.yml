@@ -15,7 +15,7 @@ jobs:
       push: false
       tags: ${{ github.repository }}:latest
    - name: Slim the image
-     uses: kitabisa@docker-slim-action@v1
+     uses: kitabisa/docker-slim-action@v1
      env:
       DSLIM_HTTP_PROBE: false
      with:
