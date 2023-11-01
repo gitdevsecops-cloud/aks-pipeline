@@ -24,6 +24,7 @@ jobs:
    - name: Push the image 
      run: docker image push "${{ github.repository }}" --all-tags
    - name: Dump the report
+     run: echo "${REPORT}"
      env:
       REPORT: ${{ steps.slim.outputs.report }}
       
