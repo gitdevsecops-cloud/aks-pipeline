@@ -58,5 +58,23 @@ jobs:
      run: echo "${REPORT}"
      env:
       REPORT: ${{ steps.slim.outputs.report }}
+   - name: Set AKS context
+     id: set-context
+     uses: azure/aks-set-context@v3
+     with:
+      resource-group: ${{ secrets.RESOURCE_GROUP }}
+      cluster-name: ${{ secrets.CLUSTER_NAME }}
+   - name: Setup kubectl
+     id: install-kubectl
+     uses: azure/setup-kubectl@v3
+   - name: Deploy to AKS
+     id: deploy-aks
+     uses: azure/k8s-deploy@v4
+     with:
+      namespace: default
+      manifests: |
+          go-pods.yaml
+      images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/my-go-app:${{ github.sha }}
+      pull-images: false
       
    
