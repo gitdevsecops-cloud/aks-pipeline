@@ -40,7 +40,10 @@ jobs:
         vuln-type: 'os,library'
         severity: 'MEDIUM,HIGH,CRITICAL'
    - name: Push the image 
-     run: docker image push "${{ github.repository }}" --all-tags
+     with:
+      context: .
+      push: true
+     uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
    - name: Dump the report
      run: echo "${REPORT}"
      env:
