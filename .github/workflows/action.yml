@@ -47,12 +47,6 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'MEDIUM,HIGH,CRITICAL'
-   - name: Push the image 
-     with:
-      context: .
-      push: true
-      tags: 'latest'
-     uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
    - name: Dump the report
      run: echo "${REPORT}"
      env:
