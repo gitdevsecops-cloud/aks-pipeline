@@ -1,0 +1,26 @@
+name: kubesec test
+
+on:
+ workflow_dispatch:
+
+jobs:
+ scan:
+  runs-on: ubuntu-latest
+  permissions:
+   security-events: write
+  steps:
+   - name: checkout code
+     uses: actions/checkout@v2
+   - name: Run kubesec 
+     uses: controlplaneio/kubesec-action@main
+     with: 
+      input: go-pods.yaml
+      exit-code: "0"
+      format: template
+      template: template/sarif.tpl
+      output: kubesec-results.sarif
+   - name: Upload Kubesec scan results to GitHub Security tab
+     uses: github/codeql-action/upload-sarif@v1
+     with:
+          sarif_file: kubesec-results.sarif
+ 
