@@ -70,6 +70,18 @@ jobs:
      uses: github/codeql-action/upload-sarif@v2
      with:
         sarif_file: ${{ steps.msdo.outputs.sarifFile }}
+   - name: Run kubesec 
+     uses: controlplaneio/kubesec-action@master
+     with: 
+      input: go-pods.yaml
+      exit-code: "0"
+      format: template
+      template: template/sarif.tpl
+      output: kubesec-results.sarif
+   - name: Upload Kubesec scan results to GitHub Security tab
+     uses: github/codeql-action/upload-sarif@v1
+     with:
+          sarif_file: kubesec-results.sarif
    - name: Dump the report
      run: echo "${REPORT}"
      env:
