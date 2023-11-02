@@ -35,7 +35,7 @@ jobs:
      env:
       DSLIM_HTTP_PROBE: false
      with:
-      target: ${{ github.repository }}:latest
+      target: ${{ secrets.REGISTRY_LOGIN_SERVER }}/my-go-app:${{ github.sha }}
       tag: "slim"
    - name: Run Trivy vulnerability scanner
      uses: aquasecurity/trivy-action@master
