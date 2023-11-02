@@ -71,7 +71,7 @@ jobs:
      with:
         sarif_file: ${{ steps.msdo.outputs.sarifFile }}
    - name: Run kubesec 
-     uses: controlplaneio/kubesec-action@master
+     uses: controlplaneio/kubesec-action@main
      with: 
       input: go-pods.yaml
       exit-code: "0"
