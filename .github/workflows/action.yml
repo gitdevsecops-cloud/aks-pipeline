@@ -33,7 +33,7 @@ jobs:
      uses: aquasecurity/trivy-action@master
      continue-on-error: true
      with:
-        image-ref: 'ghcr.io/${{ github.repository }}:latest'
+        image-ref: 'docker.io/${{ github.repository }}:latest'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
