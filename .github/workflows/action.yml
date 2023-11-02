@@ -3,7 +3,7 @@ name: Deploy to AKS
 on:
  push:
   branches:
-   - pull
+   - main
  workflow_dispatch:
 
 jobs:
@@ -70,14 +70,18 @@ jobs:
      uses: github/codeql-action/upload-sarif@v2
      with:
         sarif_file: ${{ steps.msdo.outputs.sarifFile }}
-   - name: Run kubesec 
-     uses: controlplaneio/kubesec-action@main
-     with: 
-      input: go-pods.yaml
-      exit-code: "0"
-      format: template
-      template: template/sarif.tpl
-      output: kubesec-results.sarif
+   - name: Get sarif.tpl
+     run: wget https://raw.githubusercontent.com/bsanchezmir/kubesec-action/main/sarif.tpl
+
+   - name: Run kubesec scanner
+     uses: bsanchezmir/kubesec-action@latest
+     with:
+          filename: go-pods.yaml
+          exit-code: "0"
+          format: template
+          template: ./sarif.tpl
+          output: kubesec-results.sarif
+
    - name: Upload Kubesec scan results to GitHub Security tab
      uses: github/codeql-action/upload-sarif@v2
      with:
