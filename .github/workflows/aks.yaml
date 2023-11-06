@@ -1,0 +1,31 @@
+name: Test k8s objects against gatekeeper policies
+
+on:
+ workflow_dispatch:
+
+jobs:
+    test-policies:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout
+              uses: actions/checkout@v2
+            - name: Install kubectl
+              id: install
+              uses: azure/setup-kubectl@v1
+            - name: Create k8s cluster
+              id: create
+              uses: helm/kind-action@v1.2.0
+            - name: Deploy Gatekeeper 3.5
+              run: kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.5/deploy/gatekeeper.yaml
+            - name: Wait for  Gatekeeper controller
+              run: kubectl -n gatekeeper-system wait --for=condition=Ready --timeout=60s pod -l control-plane=controller-manager
+            - name: Apply all constraint templates
+              run: kubectl apply --recursive -f policies/constrainttemplates/
+            - name: Wait
+              run: sleep 2
+            - name: Apply all constraints
+              run: kubectl apply --recursive -f policies/constraints/
+            - name: Wait
+              run: sleep 2
+            - name: Try to apply all k8s configuration
+              run: kubectl apply --recursive -f kubernetes-config --dry-run=server
